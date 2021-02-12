@@ -41,7 +41,7 @@ namespace AliceBot
             else if (!joinTime.HasValue)
                 alice.SendGroupMessage(room, $"I can see {args[0]} in the room :)");
             else
-                alice.SendGroupMessage(room, $"I've seen {user} leaving at {joinTime.Value} ({Utils.ToHumanReadable(DateTime.Now - joinTime.Value)} ago)");
+                alice.SendGroupMessage(room, $"I've seen {args[0]} leaving at {joinTime.Value} ({Utils.ToHumanReadable(DateTime.Now - joinTime.Value)} ago)");
         }
     }
 }
