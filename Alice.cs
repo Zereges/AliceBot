@@ -30,9 +30,9 @@ namespace AliceBot
 
         // ToDo: sync local time with server time
 
+        public string NickName { get; }
         private readonly XmppClient xmppClient;
         private readonly MucManager mucManager;
-        private string NickName { get; }
         private readonly Dictionary<string, DateTime> roomsList = new Dictionary<string, DateTime>();
 
         public readonly List<IPresenceHandler> presenceHandlers = new List<IPresenceHandler>();

@@ -8,6 +8,13 @@
   <ItemGroup>
     <PackageReference Include="Matrix.vNext" Version="2.4.5" />
     <PackageReference Include="Matrix.vNext.Extensions" Version="2.4.5" />
+    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
+  <PropertyGroup>
+    <NrtRevisionFormat>1.0-{chash:10}</NrtRevisionFormat>
+  </PropertyGroup>
 </Project>
