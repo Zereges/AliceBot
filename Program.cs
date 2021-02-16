@@ -38,7 +38,7 @@ namespace AliceBot
             alice.RegisterCommand(new UptimeCommand(alice));
             alice.RegisterCommand(new InfoCommand(alice));
 
-            alice.JoinRoom("testbot@conference.server.com");
+            alice.JoinRoom(room);
 
             while (Console.ReadLine() != null)
                 ; // loop
