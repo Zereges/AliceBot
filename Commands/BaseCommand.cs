@@ -1,48 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Matrix;
 
 namespace AliceBot.Commands
 {
-    public enum ParseCommandResult
-    {
-        Valid,
-        InvalidCommand,
-        TooFewParams,
-        TooMuchParams,
-    }
-
-    public abstract class BaseCommand
+    public abstract class BaseCommand : IMessageHandler
     {
         protected readonly Alice alice;
-        private readonly int paramCount;
         public string CommandString { get; }
+        private readonly int paramCount;
 
         protected BaseCommand(Alice alice, string commandString, int paramCount)
         {
             this.alice = alice;
-            this.paramCount = paramCount;
             CommandString = commandString;
+            this.paramCount = paramCount;
         }
 
         private static readonly char[] WhiteChars = {' ', '\t'};
-        protected ParseCommandResult ParseCommandArgs(string text, out List<string> parsedArgs)
+        public void HandleMessage(Jid room, string user, string server, string text, DateTime time, bool delay)
         {
-            parsedArgs = new List<string>();
-            if (!text.StartsWith(CommandString))
-                return ParseCommandResult.InvalidCommand;
+            if (!text.StartsWith(CommandString) || delay)
+                return;
 
-            var parts = text.Split(WhiteChars, StringSplitOptions.RemoveEmptyEntries);
-            
-            parsedArgs.AddRange(parts.Skip(1));
+            var parts = text.Split(WhiteChars, paramCount + 1, StringSplitOptions.RemoveEmptyEntries);
 
             if (parts[0] != CommandString)
-                return ParseCommandResult.InvalidCommand;
-            if (parsedArgs.Count < paramCount)
-                return ParseCommandResult.TooFewParams;
-            if (parsedArgs.Count > paramCount)
-                return ParseCommandResult.TooMuchParams;
-            return ParseCommandResult.Valid;
+                return;
+
+            HandleCommand(room, user, time, parts);
         }
+
+        protected abstract void HandleCommand(Jid room, string user, DateTime time, string[] args);
     }
 }

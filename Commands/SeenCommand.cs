@@ -6,7 +6,7 @@ using Matrix.Xmpp;
 
 namespace AliceBot
 {
-    internal class SeenCommand : BaseCommand, IPresenceHandler, IMessageHandler
+    internal class SeenCommand : BaseCommand, IPresenceHandler
     {
         private readonly Dictionary<string, DateTime?> times = new Dictionary<string, DateTime?>();
 
@@ -23,25 +23,21 @@ namespace AliceBot
                 times[user] = time;
         }
 
-        public void HandleMessage(Jid room, string user, string server, string text, DateTime time, bool delay)
+        protected override void HandleCommand(Jid room, string user, DateTime time, string[] args)
         {
-            if (delay)
-                return;
-
-            var result = ParseCommandArgs(text, out var args);
-            if (result == ParseCommandResult.InvalidCommand)
-                return;
-            if (result == ParseCommandResult.TooFewParams)
+            if (args.Length < 2)
+            {
                 alice.SendGroupMessage(room, "Seen whom? Try !seen <user>");
-            if (result != ParseCommandResult.Valid)
                 return;
+            }
 
-            if (!times.TryGetValue(args[0].ToLower(), out var joinTime))
-                alice.SendGroupMessage(room, $"Haven't seen them so far.{(alice.SupportsCommand<UptimeCommand>() ? " (BTW, I can tell you my !uptime)" : "")}");
+            string requestedUser = args[1];
+            if (!times.TryGetValue(requestedUser.ToLower(), out var joinTime))
+                alice.SendGroupMessage(room, $"Haven't seen them so far.{(alice.SupportsCommand("!uptime") ? " (BTW, I can tell you my !uptime)" : "")}");
             else if (!joinTime.HasValue)
-                alice.SendGroupMessage(room, $"I can see {args[0]} in the room :)");
+                alice.SendGroupMessage(room, $"I can see {requestedUser} in the room :)");
             else
-                alice.SendGroupMessage(room, $"I've seen {args[0]} leaving at {joinTime.Value} ({Utils.ToHumanReadable(DateTime.Now - joinTime.Value)} ago)");
+                alice.SendGroupMessage(room, $"I've seen {requestedUser} leaving at {joinTime.Value} ({Utils.ToHumanReadable(DateTime.Now - joinTime.Value)} ago)");
         }
     }
 }

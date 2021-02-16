@@ -102,12 +102,14 @@ namespace AliceBot
                 messageHandlers.Add(messageHandler);
         }
 
-        public bool SupportsCommand<T>() where T : BaseCommand
+        public bool SupportsCommand(string commandString)
         {
-            if (presenceHandlers.Any(presenceHandler => presenceHandler is T))
-                return true;
-            if (messageHandlers.Any(messageHandler => messageHandler is T))
-                return true;
+            foreach (var messageHandler in messageHandlers)
+            {
+                if (messageHandler is BaseCommand command && command.CommandString == commandString)
+                    return true;
+            }
+
             return false;
         }
 

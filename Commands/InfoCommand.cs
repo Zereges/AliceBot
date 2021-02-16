@@ -5,7 +5,7 @@ using Matrix;
 
 namespace AliceBot.Commands
 {
-    internal class InfoCommand : BaseCommand, IMessageHandler
+    internal class InfoCommand : BaseCommand
     {
         private static readonly string CommitHash;
 
@@ -19,15 +19,8 @@ namespace AliceBot.Commands
         {
         }
 
-        public void HandleMessage(Jid room, string user, string server, string text, DateTime time, bool delay)
+        protected override void HandleCommand(Jid room, string user, DateTime time, string[] args)
         {
-            if (delay)
-                return;
-
-            var result = ParseCommandArgs(text, out List<string> args);
-            if (result == ParseCommandResult.InvalidCommand)
-                return;
-
             alice.SendGroupMessage(room, $"I am {alice.NickName}, you can look at my guts here: https://github.com/Zereges/AliceBot (operating at commit {CommitHash})");
         }
     }
